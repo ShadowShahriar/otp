@@ -87,7 +87,7 @@ We need to store the user's email and OTP somewhere secure for a short time fram
 
 7. Copy the credentials using the **Copy Snippet** button and paste them to the `.env-sample` file:
 
-    ```
+    ```env
     # === Vercel KV REST Credentials ===
     KV_REST_API_READ_ONLY_TOKEN=
     KV_REST_API_TOKEN=
