@@ -35,9 +35,9 @@ app.post('/api/send', async (req, res) => {
 	if (!digits || digits <= 1) digit_count = 6
 
 	try {
-		const otp = crypto.randomInt(10 ** digit_count, 10 ** (digit_count + 1)).toString()
+		const otp = crypto.randomInt(10 ** (digit_count - 1), 10 ** digit_count).toString()
 		const uuid = crypto.randomUUID()
-		await kv.set(`otp:${uuid}`, JSON.stringify({ otp, email }), { ex: 300 })
+		await kv.set(`otp:${uuid}`, JSON.stringify({ otp, email, title }), { ex: 300 })
 		await transporter.sendMail({
 			from: `"${title}" <${process.env.GMAIL_USER}>`,
 			to: email,
@@ -66,11 +66,21 @@ app.get('/api/verify', async (req, res) => {
 
 		if (!record) return res.status(404).json({ success: false, error: 'OTP expired or invalid UUID.' })
 		await kv.del(key)
+
+		await transporter.sendMail({
+			from: `"${record.title}" <${process.env.GMAIL_USER}>`,
+			to: record.email,
+			subject: 'Welcome home',
+			text: `Your account is now verified.`,
+			html: `<p>Your account is now <strong>verified</strong>.</p>`
+		})
+
 		return res.status(200).json({
 			success: true,
 			data: {
 				email: record.email,
-				otp: record.otp
+				otp: record.otp,
+				title: record.title
 			}
 		})
 	} catch (error) {
