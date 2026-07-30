@@ -1,0 +1,34 @@
+{
+	"name": "otp",
+	"version": "0.0.1",
+	"description": "A barebones OTP server.",
+	"keywords": [
+		"otp",
+		"node",
+		"server",
+		"vercel"
+	],
+	"homepage": "https://github.com/ShadowShahriar/otp#readme",
+	"bugs": {
+		"url": "https://github.com/ShadowShahriar/otp/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ShadowShahriar/otp.git"
+	},
+	"license": "MIT",
+	"author": "S. Shahriar <hi@shadowshahriar.dev>",
+	"type": "module",
+	"main": "api/index.js",
+	"scripts": {
+		"test": "node api/index.js"
+	},
+	"dependencies": {
+		"@vercel/kv": "^3.0.0",
+		"express": "^5.2.1",
+		"nodemailer": "^9.0.3"
+	},
+	"devDependencies": {
+		"dotenv": "^17.4.2"
+	}
+}
