@@ -14,8 +14,8 @@ app.use(express.json())
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
-		user: process.env.GMAIL_USER,
-		pass: process.env.GMAIL_PASS
+		user: process.env.EMAIL_USER,
+		pass: process.env.EMAIL_PASS
 	}
 })
 
@@ -32,7 +32,7 @@ app.post('/api/send', async (req, res) => {
 
 	if (!email) return res.status(400).json({ error: 'Missing email address.' })
 	if (!title) return res.status(400).json({ error: 'Missing project title.' })
-	if (!digits || digits <= 1) digits = 6
+	if (!digits || digits <= 1) digit_count = 6
 
 	try {
 		const otp = crypto.randomInt(10 ** digit_count, 10 ** (digit_count + 1)).toString()
