@@ -31,7 +31,7 @@ This will install the following dependencies:
 3. [**`@vercel/kv`**](https://vercel.com/changelog/vercel-kv)
     > Allows us to save and read data quickly from serverless and edge functions.
 
-Additionally, during testing, the [**`dotenv`**](https://www.npmjs.com/package/dotenv) package is allow installed as a development dependency.
+Additionally, during testing, the [**`dotenv`**](https://www.npmjs.com/package/dotenv) package is also installed as a development dependency.
 
 ## Credentials
 
@@ -116,4 +116,5 @@ We will need two terminals to test the service.
 
 ## License
 
-The source code of this repository is licensed under the [**MIT License**](https://github.com/ShadowShahriar/otp/blob/main/LICENSE).
+- The source code of this repository is licensed under the [**MIT License**](https://github.com/ShadowShahriar/otp/blob/main/LICENSE).
+- Project icon was sourced from [**Streamline Icons**](https://streamlinehq.com).
