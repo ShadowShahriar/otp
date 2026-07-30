@@ -43,7 +43,8 @@ Since **HyperOTP** uses Nodemailer under the hood, it requires an SMTP configura
 
 We are using an App Password to access our Gmail account and send emails.
 
-> [!CAUTION] We need to turn on **2-Step Verification** on the Google account before we can create an App Password.
+> [!CAUTION]
+> We need to turn on **2-Step Verification** on the Google account before we can create an App Password.
 
 Here is how we can create an App Password:
 
