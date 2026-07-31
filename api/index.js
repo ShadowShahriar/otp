@@ -56,6 +56,47 @@ app.post('/api/send', async (req, res) => {
 	}
 })
 
+app.post('/api/sms', async (req, res) => {
+	const { phone, title, digits } = req.body
+	let digit_count = digits
+
+	if (!phone) return res.status(400).json({ error: 'Missing phone number.' })
+	if (!title) return res.status(400).json({ error: 'Missing project title.' })
+	if (!digits || digits <= 1) digit_count = 6
+
+	try {
+		const otp = crypto.randomInt(10 ** (digit_count - 1), 10 ** digit_count).toString()
+		const uuid = crypto.randomUUID()
+		await kv.set(`otp:${uuid}`, JSON.stringify({ otp, phone, title }), { ex: 300 })
+
+		const smsres = await fetch(
+			`https://api.textbee.dev/api/v1/gateway/devices/${process.env.TEXTBEE_DEVICE_ID}/send-sms`,
+			{
+				method: 'POST',
+				headers: { 'x-api-key': process.env.TEXTBEE_API_KEY, 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					recipients: [phone],
+					message: `Your security OTP is: ${otp}. This will expire in 5 minutes. - ${title}`
+				})
+			}
+		)
+
+		if (!smsres.ok) {
+			const smserr = await smsres.json().catch(() => ({}))
+			throw new Error(smserr.error || `HTTP ${smsres.status}`)
+		} else {
+			return res.status(200).json({
+				success: true,
+				message: 'OTP generated and sent successfully.',
+				uuid: uuid
+			})
+		}
+	} catch (error) {
+		console.error('POST /api/sms failed:', error)
+		return res.status(500).json({ success: false, error: error.message })
+	}
+})
+
 app.get('/api/verify', async (req, res) => {
 	const { uuid } = req.query
 	if (!uuid) return res.status(400).json({ error: 'Missing uuid query parameter.' })
@@ -67,18 +108,21 @@ app.get('/api/verify', async (req, res) => {
 		if (!record) return res.status(404).json({ success: false, error: 'OTP expired or invalid UUID.' })
 		await kv.del(key)
 
-		await transporter.sendMail({
-			from: `"${record.title}" <${process.env.GMAIL_USER}>`,
-			to: record.email,
-			subject: 'Welcome home',
-			text: `Your account is now verified.`,
-			html: `<p>Your account is now <strong>verified</strong>.</p>`
-		})
+		if (record.email) {
+			await transporter.sendMail({
+				from: `"${record.title}" <${process.env.GMAIL_USER}>`,
+				to: record.email,
+				subject: 'Welcome home',
+				text: `Your account is now verified.`,
+				html: `<p>Your account is now <strong>verified</strong>.</p>`
+			})
+		}
 
 		return res.status(200).json({
 			success: true,
 			data: {
 				email: record.email,
+				phone: record.phone,
 				otp: record.otp,
 				title: record.title
 			}
