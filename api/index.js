@@ -108,11 +108,11 @@ app.get('/api/verify', async (req, res) => {
 	try {
 		const key = `otp:${uuid}`
 		const record = await kv.get(key)
-		const expectedOTP = record.otp
 
 		if (!record) return res.status(404).json({ success: false, error: 'OTP expired or invalid UUID.' })
 		await kv.del(key)
 
+		const expectedOTP = record.otp
 		if (record.email && otp && otp === expectedOTP) {
 			await transporter.sendMail({
 				from: `"${record.title}" <${process.env.GMAIL_USER}>`,
