@@ -100,7 +100,7 @@ app.post('/api/sms', async (req, res) => {
 })
 
 app.get('/api/verify', async (req, res) => {
-	const { uuid, auth } = req.query
+	const { uuid, auth, otp } = req.query
 
 	if (!auth || auth != process.env.AUTHORIZATION_KEY) return res.status(401).json({ error: 'Unauthorized.' })
 	if (!uuid) return res.status(400).json({ error: 'Missing uuid query parameter.' })
@@ -108,11 +108,12 @@ app.get('/api/verify', async (req, res) => {
 	try {
 		const key = `otp:${uuid}`
 		const record = await kv.get(key)
+		const expectedOTP = record.otp
 
 		if (!record) return res.status(404).json({ success: false, error: 'OTP expired or invalid UUID.' })
 		await kv.del(key)
 
-		if (record.email) {
+		if (record.email && otp && otp === expectedOTP) {
 			await transporter.sendMail({
 				from: `"${record.title}" <${process.env.GMAIL_USER}>`,
 				to: record.email,
