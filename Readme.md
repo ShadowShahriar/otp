@@ -105,7 +105,8 @@ Sample Response:
 
 ```js
 const uuid = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
-const res = await fetch(`${BASE_URL}/api/verify?uuid=${uuid}&auth=${AUTHORIZATION_KEY}`, { method: 'GET' })
+const otp = 'XXXXX'
+const res = await fetch(`${BASE_URL}/api/verify?uuid=${uuid}&auth=${AUTHORIZATION_KEY}&otp=${otp}`, { method: 'GET' })
 const data = await res.json()
 ```
 

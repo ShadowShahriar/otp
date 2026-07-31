@@ -64,7 +64,9 @@ const test = async () => {
 		const otp = await askQuestion('🟨 Enter the OTP you received: ')
 		console.log('🟦 Verifying')
 
-		const vres = await fetch(`${BASE_URL}/api/verify?uuid=${uuid}&auth=${AUTHORIZATION_KEY}`, { method: 'GET' })
+		const vres = await fetch(`${BASE_URL}/api/verify?uuid=${uuid}&auth=${AUTHORIZATION_KEY}&otp=${otp.trim()}`, {
+			method: 'GET'
+		})
 
 		const vdata = await vres.json()
 		if (!vres.ok) throw new Error(`Verification fetching failed: ${vdata.error || vres.statusText}`)
