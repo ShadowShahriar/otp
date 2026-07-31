@@ -35,6 +35,14 @@ Additionally, during testing, the [**`dotenv`**](https://www.npmjs.com/package/d
 
 ## Basic Usage
 
+```js
+// Change this to your deployment URL later
+const BASE_URL = 'http://localhost:3000'
+
+// Set this environment variable in the Vercel Dashboard
+const AUTHORIZATION_KEY = '123456'
+```
+
 ### Request an Email OTP
 
 ```js
@@ -44,7 +52,8 @@ const res = await fetch(`${BASE_URL}/api/send`, {
 	body: JSON.stringify({
 		email: 'testmail1234@gmail.com',
 		title: 'Verification',
-		digits: 5 // any integer between 2-6
+		digits: 5, // any integer between 2-6
+		auth: AUTHORIZATION_KEY
 	})
 })
 
@@ -72,7 +81,8 @@ const res = await fetch(`${BASE_URL}/api/sms`, {
 	body: JSON.stringify({
 		phone: '+8801XXXXXXXXX',
 		title: 'Verification',
-		digits: 5 // any integer between 2-6
+		digits: 5, // any integer between 2-6
+		auth: AUTHORIZATION_KEY
 	})
 })
 
@@ -95,7 +105,7 @@ Sample Response:
 
 ```js
 const uuid = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
-const res = await fetch(`${BASE_URL}/api/verify?uuid=${uuid}`, { method: 'GET' })
+const res = await fetch(`${BASE_URL}/api/verify?uuid=${uuid}&auth=${AUTHORIZATION_KEY}`, { method: 'GET' })
 const data = await res.json()
 ```
 

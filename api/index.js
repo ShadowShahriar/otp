@@ -27,9 +27,10 @@ app.get('/', async (req, res) => {
 })
 
 app.post('/api/send', async (req, res) => {
-	const { email, title, digits } = req.body
+	const { email, title, digits, auth } = req.body
 	let digit_count = digits
 
+	if (!auth || auth != process.env.AUTHORIZATION_KEY) return res.status(401).json({ error: 'Unauthorized.' })
 	if (!email) return res.status(400).json({ error: 'Missing email address.' })
 	if (!title) return res.status(400).json({ error: 'Missing project title.' })
 	if (!digits || digits <= 1) digit_count = 6
@@ -57,9 +58,10 @@ app.post('/api/send', async (req, res) => {
 })
 
 app.post('/api/sms', async (req, res) => {
-	const { phone, title, digits } = req.body
+	const { phone, title, digits, auth } = req.body
 	let digit_count = digits
 
+	if (!auth || auth != process.env.AUTHORIZATION_KEY) return res.status(401).json({ error: 'Unauthorized.' })
 	if (!phone) return res.status(400).json({ error: 'Missing phone number.' })
 	if (!title) return res.status(400).json({ error: 'Missing project title.' })
 	if (!digits || digits <= 1) digit_count = 6
@@ -98,7 +100,9 @@ app.post('/api/sms', async (req, res) => {
 })
 
 app.get('/api/verify', async (req, res) => {
-	const { uuid } = req.query
+	const { uuid, auth } = req.query
+
+	if (!auth || auth != process.env.AUTHORIZATION_KEY) return res.status(401).json({ error: 'Unauthorized.' })
 	if (!uuid) return res.status(400).json({ error: 'Missing uuid query parameter.' })
 
 	try {
