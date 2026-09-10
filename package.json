@@ -26,7 +26,7 @@
 	"dependencies": {
 		"@vercel/kv": "^3.0.0",
 		"express": "^5.2.1",
-		"nodemailer": "^9.0.3"
+		"nodemailer": "^9.1.1"
 	},
 	"devDependencies": {
 		"dotenv": "^17.4.2"
